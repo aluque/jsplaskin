@@ -543,6 +543,11 @@ function refreshXScale() {
 // EXPORT
 // ============================================================
 
+function csvEscape(v) {
+  const s = (v === undefined || v === null) ? '' : String(v);
+  return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+
 function exportCurrentPlot() {
   // Find the active tab's first rendered chart
   const activeTab = document.querySelector('.tab-pane.active');
@@ -554,27 +559,26 @@ function exportCurrentPlot() {
     return;
   }
 
-  const gd = chartDiv;
-  const traces = gd.data;
+  const traces = chartDiv.data;
   if (!traces || !traces.length) { alert('No data to export.'); return; }
 
-  let tsv = '# JSPlaskin export\n# time';
-  traces.forEach(tr => { tsv += '\t' + (tr.name || '?'); });
-  tsv += '\n';
+  // Header row
+  const header = ['time', ...traces.map(tr => tr.name || '?')].map(csvEscape).join(',');
 
-  // Use the first trace's x for time column
+  // Data rows — each trace may have a different x array; use the union of all x values
   const nPts = Math.max(...traces.map(tr => (tr.x || []).length));
+  const rows = [];
   for (let i = 0; i < nPts; i++) {
     const t = traces[0].x ? traces[0].x[i] : '';
-    tsv += t;
-    traces.forEach(tr => { tsv += '\t' + (tr.y && tr.y[i] !== undefined ? tr.y[i] : ''); });
-    tsv += '\n';
+    const cols = [t, ...traces.map(tr => (tr.y && tr.y[i] !== undefined ? tr.y[i] : ''))];
+    rows.push(cols.map(csvEscape).join(','));
   }
 
-  const blob = new Blob([tsv], { type: 'text/tab-separated-values' });
+  const csv  = [header, ...rows].join('\n') + '\n';
+  const blob = new Blob([csv], { type: 'text/csv' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
-  a.href = url; a.download = 'jsplaskin_export.tsv'; a.click();
+  a.href = url; a.download = 'jsplaskin_export.csv'; a.click();
   URL.revokeObjectURL(url);
 }
 
