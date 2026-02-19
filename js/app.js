@@ -150,6 +150,7 @@ function populateTable(tableId, items, singleSelect = false) {
   };
 
   tbody.addEventListener('click', tbody._clickHandler);
+  tbody.addEventListener('mousedown', (e) => { if (e.shiftKey) e.preventDefault(); });
 }
 
 function getSelected(tableId) {
