@@ -278,6 +278,10 @@ const PLOTLY_CFG = {
   toImageButtonOptions: { format: 'svg', filename: 'jsplaskin' },
 };
 
+const PLOTLY_LAYOUT_DEFAULTS = {
+  hoverlabel: { namelength: -1 },
+};
+
 function xAxisLayout() {
   const th = chartTheme();
   const cfg = {
@@ -292,6 +296,7 @@ function xAxisLayout() {
     linecolor: th.lineColor,
     mirror: true,
     color: th.axisColor,
+    hoverformat: '.3g',
   };
   if (sharedXRange) cfg.range = sharedXRange;
   return cfg;
@@ -312,6 +317,7 @@ function yAxisLayout(title = '', scale = 'log') {
     mirror: true,
     autorange: true,
     color: th.axisColor,
+    hoverformat: '.3g',
   };
 }
 
@@ -393,7 +399,7 @@ function registerSync(divId) {
 async function renderChart(divId, traces, layout) {
   const div = document.getElementById(divId);
   div._syncRegistered = false; // re-register after each full re-render
-  await Plotly.react(div, traces, layout, PLOTLY_CFG);
+  await Plotly.react(div, traces, { ...PLOTLY_LAYOUT_DEFAULTS, ...layout }, PLOTLY_CFG);
   registerSync(divId);
 }
 
