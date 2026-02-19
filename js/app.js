@@ -231,7 +231,7 @@ const PLOTLY_CFG = {
 function xAxisLayout() {
   const th = chartTheme();
   const cfg = {
-    title: { text: 'Time', font: { size: 12 } },
+    title: { text: 'Time [s]', font: { size: 12 } },
     type: logTimeScale ? 'log' : 'linear',
     exponentformat: 'power',
     tickfont: { size: 11 },
