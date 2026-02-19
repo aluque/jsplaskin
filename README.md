@@ -27,6 +27,55 @@ You can also drag and drop any of the above onto the app window.
 
 HDF5 files may use either the modern `main/` group layout or the legacy `zdplaskin/` group layout.
 
+## HDF5 format
+
+The file must contain a top-level group named `main` (preferred) or `zdplaskin` (legacy). All datasets live inside that group.
+
+### Group structure
+
+```
+main/
+  t                  # 1-D array of time points (float64)
+  density/           # group — one dataset per species
+    0001             # density of species 1 vs. time (float64 array)
+    0002
+    ...
+  rate/              # group — one dataset per reaction
+    0001             # speed of reaction 1 vs. time (float64 array)
+    0002
+    ...
+  condition/         # group — one dataset per condition variable (optional)
+    0001
+    ...
+  source_matrix      # 2-D array, shape (n_species, n_reactions) (optional)
+```
+
+### Dataset naming and labels
+
+Datasets inside `density/`, `rate/`, and `condition/` must be named with zero-padded four-digit integers (`0001`, `0002`, …). Each dataset should carry a string attribute called `name` containing the human-readable label (e.g. `"O2"` or `"e + O2 -> O + O-"`). If the attribute is absent, the numeric key is used as the label.
+
+### Source matrix
+
+`source_matrix` is a 2-D dataset of shape `(n_species, n_reactions)`. Each entry is the net stoichiometric coefficient of that species in that reaction: positive if produced, negative if consumed, zero otherwise. This dataset is optional but required for the Sensitivity analysis tab.
+
+### Minimal Python example
+
+```python
+import h5py, numpy as np
+
+t        = np.array([0.0, 1e-9, 2e-9])   # 3 time points
+species  = ["O", "O2", "O3"]
+densities = np.random.rand(len(species), len(t))
+
+with h5py.File("output.h5", "w") as f:
+    grp = f.create_group("main")
+    grp.create_dataset("t", data=t)
+    dgrp = grp.create_group("density")
+    for i, (name, dens) in enumerate(zip(species, densities)):
+        ds = dgrp.create_dataset(f"{i+1:04d}", data=dens)
+        ds.attrs["name"] = name
+```
+
 ## Text-file format
 
 If your simulation code does not produce HDF5 output, you can write a small set of plain text files and load them as a folder or ZIP archive. The files use a simple whitespace-separated format described below.
