@@ -233,7 +233,7 @@ function xAxisLayout() {
   const cfg = {
     title: { text: 'Time', font: { size: 12 } },
     type: logTimeScale ? 'log' : 'linear',
-    exponentformat: 'e',
+    exponentformat: 'power',
     tickfont: { size: 11 },
     showgrid: true,
     gridcolor: th.grid,
@@ -252,7 +252,7 @@ function yAxisLayout(title = '', scale = 'log') {
   return {
     title: { text: title, font: { size: 12 } },
     type: scale,
-    exponentformat: 'e',
+    exponentformat: 'power',
     tickfont: { size: 11 },
     showgrid: true,
     gridcolor: th.grid,
