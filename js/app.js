@@ -746,6 +746,10 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ---- Menu: Help ----
+  document.getElementById('menu-github').addEventListener('click', () => {
+    window.open('https://github.com/aluque/jsplaskin', '_blank');
+  });
+
   document.getElementById('menu-about').addEventListener('click', () => {
     alert(
       'JSPlaskin\n\n' +
