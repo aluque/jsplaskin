@@ -506,6 +506,19 @@ async function updateSourceChart() {
     renderChart('creation-chart', creationTraces, createLayout),
     renderChart('removal-chart',  removalTraces,  removeLayout),
   ]);
+
+  // Synchronise margins so both y-axes line up exactly.
+  // _size holds the actual computed margins after Plotly's auto-adjustment.
+  const d1 = document.getElementById('creation-chart');
+  const d2 = document.getElementById('removal-chart');
+  if (d1._fullLayout && d2._fullLayout) {
+    const l = Math.max(d1._fullLayout._size.l, d2._fullLayout._size.l);
+    const r = Math.max(d1._fullLayout._size.r, d2._fullLayout._size.r);
+    await Promise.all([
+      Plotly.relayout(d1, { 'margin.l': l, 'margin.r': r }),
+      Plotly.relayout(d2, { 'margin.l': l, 'margin.r': r }),
+    ]);
+  }
 }
 
 /** Build traces using actual (raw) reaction rates, not weighted */
