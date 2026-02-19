@@ -32,6 +32,7 @@
       <div class="menu-label" id="menu-file-label">File
         <div class="menu-dropdown">
           <div class="menu-item" id="menu-open-h5">Open HDF5 (.h5)…</div>
+          <div class="menu-item" id="menu-open-zip">Open ZIP archive…</div>
           <div class="menu-item" id="menu-open-dir">Import from directory…</div>
           <div class="menu-sep"></div>
           <div class="menu-item" id="menu-export">Export plot data…</div>
@@ -161,13 +162,14 @@
 
 <!-- Hidden file inputs -->
 <input type="file" id="input-h5"  accept=".h5,.hdf5" style="display:none">
+<input type="file" id="input-zip" accept=".zip"       style="display:none">
 <input type="file" id="input-dir" webkitdirectory multiple style="display:none">
 
 <!-- Drop overlay -->
 <div id="drop-overlay" class="hidden">
   <div class="drop-msg">
     Drop file or folder here
-    <small>.h5 file  or  folder containing qt_*.txt files</small>
+    <small>.h5 file · .zip archive · folder with qt_*.txt files</small>
   </div>
 </div>
 

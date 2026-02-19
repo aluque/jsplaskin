@@ -197,6 +197,55 @@ async function loadH5File(file) {
   }
 }
 
+async function loadJSZip() {
+  if (window.JSZip) return window.JSZip;
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+    script.onload  = () => resolve(window.JSZip);
+    script.onerror = () => reject(new Error('Failed to load JSZip. Check your internet connection.'));
+    document.head.appendChild(script);
+  });
+}
+
+async function loadZipFile(file) {
+  showLoading('Loading ' + file.name + '…');
+  try {
+    const JSZip = await loadJSZip();
+    const zip   = await JSZip.loadAsync(file);
+
+    // Collect all .txt entries (skip directories)
+    const entries = [];
+    zip.forEach((path, entry) => {
+      if (!entry.dir && /\.txt$/i.test(entry.name)) entries.push(entry);
+    });
+
+    if (!entries.length) throw new Error('No .txt files found in the ZIP archive.');
+
+    // Extract as File objects using the basename so DirectoryData can match by name
+    const files = await Promise.all(entries.map(async entry => {
+      const bytes    = await entry.async('uint8array');
+      const basename = entry.name.split('/').pop();
+      return new File([bytes], basename, { type: 'text/plain' });
+    }));
+
+    data = await DirectoryData.fromFiles(files);
+    populateAll();
+    setStatus(
+      'Loaded: ' + file.name +
+      '  |  ' + data.species.length   + ' species' +
+      '  |  ' + data.reactions.length + ' reactions' +
+      '  |  ' + data.t.length         + ' timesteps'
+    );
+  } catch (e) {
+    setStatus('Error: ' + e.message);
+    console.error(e);
+    alert('Failed to load ZIP file:\n' + e.message);
+  } finally {
+    hideLoading();
+  }
+}
+
 async function loadDirectory(fileList) {
   showLoading('Loading directory…');
   try {
@@ -646,6 +695,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('menu-open-h5').addEventListener('click', () =>
     document.getElementById('input-h5').click()
   );
+  document.getElementById('menu-open-zip').addEventListener('click', () =>
+    document.getElementById('input-zip').click()
+  );
   document.getElementById('menu-open-dir').addEventListener('click', () =>
     document.getElementById('input-dir').click()
   );
@@ -680,6 +732,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target.files[0]) await loadH5File(e.target.files[0]);
     e.target.value = '';
   });
+  document.getElementById('input-zip').addEventListener('change', async (e) => {
+    if (e.target.files[0]) await loadZipFile(e.target.files[0]);
+    e.target.value = '';
+  });
   document.getElementById('input-dir').addEventListener('change', async (e) => {
     if (e.target.files.length) await loadDirectory(e.target.files);
     e.target.value = '';
@@ -706,11 +762,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const files = await readDroppedEntries(Array.from(e.dataTransfer.items));
     if (!files.length) return;
 
-    // Detect type: prefer h5 if a single h5 dropped, else treat as directory
-    const h5 = files.find(f => /\.(h5|hdf5)$/i.test(f.name));
+    // Detect type: h5 > zip > directory
+    const h5  = files.find(f => /\.(h5|hdf5)$/i.test(f.name));
+    const zip = files.find(f => /\.zip$/i.test(f.name));
     const hasQtFiles = files.some(f => /qt_.*\.txt$/i.test(f.name));
     if (h5 && !hasQtFiles) {
       await loadH5File(h5);
+    } else if (zip && !hasQtFiles) {
+      await loadZipFile(zip);
     } else {
       await loadDirectory(files);
     }
@@ -736,7 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.menu-label.open').forEach(l => l.classList.remove('open'));
   });
 
-  setStatus('Ready — drop a .h5 file or a folder with qt_*.txt files to load data');
+  setStatus('Ready — drop a .h5 file, a .zip archive, or a folder with qt_*.txt files to load data');
 
   // ---- Platform-aware multi-select hint ----
   const modKey = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl';
