@@ -1,0 +1,663 @@
+/* ============================================================
+   style.css  –  JSPlaskin  (Plasma Lab Dark)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Backgrounds */
+  --bg:           #07090f;
+  --bg-panel:     #0c1120;
+  --bg-elevated:  #101828;
+  --bg-menu:      #0c1120;
+
+  /* Borders */
+  --border:       #1a253a;
+  --border-mid:   #1e2d45;
+  --border-strong: #253550;
+
+  /* Text */
+  --text:         #ccd8f0;
+  --text-muted:   #8099c4;
+  --text-dim:     #4d6490;
+
+  /* Accent — ionised blue */
+  --accent:       #4d9fff;
+  --accent-bright: #7dbfff;
+  --accent-dim:   rgba(77, 159, 255, 0.10);
+  --accent-glow:  0 0 16px rgba(77, 159, 255, 0.25);
+
+  /* Interactive states */
+  --sel-bg:       #0b2a4e;
+  --sel-border:   #17477a;
+  --sel-text:     #90c2ff;
+  --row-hover:    #0d1d33;
+  --menu-hover:   var(--accent-dim);
+
+  /* Tabs */
+  --tab-active:   #0c1120;
+  --tab-inactive: #07090f;
+
+  /* Buttons */
+  --btn-bg:       #101828;
+  --btn-border:   #1e2d45;
+  --btn-hover:    #152035;
+  --btn-active:   #0a1220;
+  --btn-text:     #8099c4;
+
+  /* Misc */
+  --header-bg:    #07090f;
+  --shadow:       0 6px 24px rgba(0, 0, 0, 0.65);
+  --shadow-sm:    0 2px 10px rgba(0, 0, 0, 0.5);
+  --scroll-track: #07090f;
+  --scroll-thumb: #1a2d48;
+  --scroll-hover: #24406a;
+
+  /* Chart panel */
+  --right-panel-bg: #0c1120;
+}
+
+/* ============================================================
+   Light theme overrides
+   ============================================================ */
+
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg:           #f4f6fb;
+  --bg-panel:     #eaecf4;
+  --bg-elevated:  #ffffff;
+  --bg-menu:      #ffffff;
+
+  /* Borders */
+  --border:       #d0d6e8;
+  --border-mid:   #bcc8dc;
+  --border-strong: #a8b8d0;
+
+  /* Text */
+  --text:         #1a2540;
+  --text-muted:   #4a6080;
+  --text-dim:     #8098b8;
+
+  /* Accent */
+  --accent:       #2070d4;
+  --accent-bright: #3a88f0;
+  --accent-dim:   rgba(32, 112, 212, 0.10);
+  --accent-glow:  0 0 16px rgba(32, 112, 212, 0.15);
+
+  /* Interactive states */
+  --sel-bg:       #ddeeff;
+  --sel-border:   #90bce8;
+  --sel-text:     #0a3d8a;
+  --row-hover:    #ecf0fa;
+  --menu-hover:   var(--accent-dim);
+
+  /* Tabs */
+  --tab-active:   #ffffff;
+  --tab-inactive: #f4f6fb;
+
+  /* Buttons */
+  --btn-bg:       #eef2fc;
+  --btn-border:   #c8d4ec;
+  --btn-hover:    #dde4f5;
+  --btn-active:   #ccd6f0;
+  --btn-text:     #3a5888;
+
+  /* Misc */
+  --header-bg:    #eaecf4;
+  --shadow:       0 6px 24px rgba(0, 0, 0, 0.10);
+  --shadow-sm:    0 2px 10px rgba(0, 0, 0, 0.06);
+  --scroll-track: #eaecf4;
+  --scroll-thumb: #c0cce0;
+  --scroll-hover: #a0b0cc;
+
+  /* Chart panel */
+  --right-panel-bg: #f8f9fd;
+}
+
+[data-theme="light"] #topbar::after {
+  background: linear-gradient(90deg,
+    var(--accent) 0%,
+    rgba(32, 112, 212, 0.3) 35%,
+    transparent 70%);
+}
+
+/* ---- Reset ---- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---- App shell ---- */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ============================================================
+   Topbar
+   ============================================================ */
+
+#topbar {
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-mid);
+  height: 36px;
+  padding: 0 12px 0 0;
+  gap: 0;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* Accent hairline along topbar bottom */
+#topbar::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    var(--accent) 0%,
+    rgba(77,159,255,0.3) 35%,
+    transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Brand pill */
+#app-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 16px 0 12px;
+  height: 100%;
+  border-right: 1px solid var(--border);
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+#app-brand .brand-icon {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+}
+
+#app-brand .brand-icon svg {
+  display: block;
+}
+
+#app-brand .brand-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  opacity: 0.9;
+}
+
+/* ============================================================
+   Menubar
+   ============================================================ */
+
+#menubar {
+  display: flex;
+  gap: 0;
+  height: 100%;
+  align-items: center;
+  padding: 0 4px;
+}
+
+.menu-label {
+  position: relative;
+  padding: 4px 11px;
+  cursor: pointer;
+  border-radius: 5px;
+  user-select: none;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+  transition: color 0.12s, background 0.12s;
+}
+.menu-label:hover,
+.menu-label.open {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.menu-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: var(--bg-menu);
+  border: 1px solid var(--border-mid);
+  border-radius: 7px;
+  box-shadow: var(--shadow);
+  z-index: 9000;
+  min-width: 210px;
+  padding: 5px;
+}
+.menu-label.open .menu-dropdown { display: block; }
+
+.menu-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+  font-size: 12px;
+  border-radius: 5px;
+  color: var(--text);
+  transition: background 0.1s, color 0.1s;
+}
+.menu-item:hover {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+.menu-item.checked::before {
+  content: '✓  ';
+  font-size: 10px;
+  color: var(--accent);
+}
+.menu-item:not(.checked)::before {
+  content: '   ';
+  font-size: 10px;
+  white-space: pre;
+}
+.menu-sep {
+  height: 1px;
+  background: var(--border);
+  margin: 5px 0;
+}
+
+/* ============================================================
+   Status bar
+   ============================================================ */
+
+#status-bar {
+  flex: 1;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  padding-left: 14px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  letter-spacing: 0.03em;
+}
+
+/* ============================================================
+   Main content
+   ============================================================ */
+
+#main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================================================
+   Tab bar — underline style
+   ============================================================ */
+
+#tab-bar {
+  display: flex;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-mid);
+  padding: 0 10px;
+  gap: 0;
+  flex-shrink: 0;
+  align-items: flex-end;
+  height: 40px;
+}
+
+.tab-btn {
+  padding: 8px 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-dim);
+  outline: none;
+  transition: color 0.15s, border-color 0.15s;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  margin-bottom: -1px;
+  border-radius: 0;
+}
+.tab-btn:hover:not(.active) {
+  color: var(--text-muted);
+  border-bottom-color: var(--border-strong);
+}
+.tab-btn.active {
+  color: var(--accent);
+  font-weight: 500;
+  border-bottom-color: var(--accent);
+}
+
+/* ============================================================
+   Tab panes
+   ============================================================ */
+
+.tab-pane {
+  display: none;
+  flex: 1;
+  overflow: hidden;
+}
+.tab-pane.active {
+  display: flex;
+  flex-direction: row;
+}
+
+/* ============================================================
+   Left panel
+   ============================================================ */
+
+.left-panel {
+  width: 240px;
+  min-width: 160px;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-mid);
+  background: var(--bg-panel);
+  flex-shrink: 0;
+  resize: horizontal;
+  overflow: auto;
+}
+
+.list-wrap {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   Data tables
+   ============================================================ */
+
+.data-list {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-list thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border-mid);
+  padding: 5px 8px;
+  font-weight: 500;
+  font-size: 10px;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+}
+.data-list thead th:first-child {
+  text-align: right;
+  width: 38px;
+}
+
+.data-list tbody tr {
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.07s;
+}
+.data-list tbody tr:last-child { border-bottom: none; }
+.data-list tbody tr:hover:not(.selected) { background: var(--row-hover); }
+.data-list tbody tr.selected {
+  background: var(--sel-bg);
+  border-bottom-color: var(--sel-border);
+}
+
+.data-list tbody td {
+  padding: 4px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  color: var(--text);
+}
+.data-list tbody td:first-child {
+  text-align: right;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  width: 38px;
+  padding-right: 10px;
+}
+.data-list tbody tr.selected td { color: var(--sel-text); }
+.data-list tbody tr.selected td:first-child { color: var(--accent); }
+
+/* ============================================================
+   Filter row (sensitivity tab)
+   ============================================================ */
+
+.filter-row {
+  padding: 8px 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  flex-shrink: 0;
+  background: var(--bg-panel);
+}
+.filter-row label {
+  color: var(--text-dim);
+  white-space: nowrap;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.filter-row select {
+  flex: 1;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid var(--btn-border);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236880a8' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 24px;
+}
+.filter-row select:focus { border-color: var(--accent); }
+
+/* ============================================================
+   Multi-select hint
+   ============================================================ */
+
+.list-hint {
+  padding: 5px 8px;
+  font-size: 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: var(--text-dim);
+  text-align: center;
+  border-top: 1px solid var(--border);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Plot buttons
+   ============================================================ */
+
+.plot-btn {
+  margin: 8px 10px;
+  padding: 7px 16px;
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--btn-text);
+  flex-shrink: 0;
+  transition: background 0.12s, border-color 0.12s, color 0.12s, transform 0.08s;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+.plot-btn:hover {
+  background: var(--btn-hover);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.plot-btn:active {
+  background: var(--btn-active);
+  transform: translateY(1px);
+}
+
+/* ============================================================
+   Right panel (charts) — kept light for Plotly compatibility
+   ============================================================ */
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--right-panel-bg);
+  min-width: 0;
+}
+
+.chart-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.chart-area > div {
+  flex: 1;
+  min-height: 0;
+}
+
+.source-charts {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.source-charts > div {
+  flex: 1;
+  min-height: 0;
+}
+.source-charts > div + div {
+  border-top: 1px solid var(--border);
+}
+
+/* ============================================================
+   Drop overlay
+   ============================================================ */
+
+#drop-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 9, 15, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9900;
+}
+#drop-overlay.hidden { display: none; }
+
+.drop-msg {
+  background: var(--bg-elevated);
+  border: 2px dashed var(--accent);
+  border-radius: 12px;
+  padding: 52px 80px;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text);
+  box-shadow: var(--shadow), 0 0 60px rgba(77,159,255,0.12);
+  text-align: center;
+  animation: dropPulse 2.4s ease-in-out infinite;
+}
+.drop-msg small {
+  display: block;
+  margin-top: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+@keyframes dropPulse {
+  0%, 100% { border-color: rgba(77,159,255,0.5); }
+  50%       { border-color: rgba(77,159,255,1);   }
+}
+
+/* ============================================================
+   Loading overlay
+   ============================================================ */
+
+#loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 9, 15, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9800;
+  gap: 22px;
+}
+#loading-overlay.hidden { display: none; }
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  border: 2px solid var(--border-mid);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#loading-msg {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
+/* ============================================================
+   Custom scrollbars
+   ============================================================ */
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--scroll-track); }
+::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--scroll-hover); }
+

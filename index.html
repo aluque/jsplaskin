@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSPlaskin – Plasma Kinetics Viewer</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===== Top bar: menu + status ===== -->
+  <div id="topbar">
+
+    <!-- Brand -->
+    <div id="app-brand">
+      <span class="brand-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="8" cy="8" rx="7" ry="3.5" stroke="#4d9fff" stroke-width="1.2" fill="none"/>
+          <ellipse cx="8" cy="8" rx="7" ry="3.5" stroke="#4d9fff" stroke-width="1.2" fill="none" transform="rotate(60 8 8)"/>
+          <ellipse cx="8" cy="8" rx="7" ry="3.5" stroke="#4d9fff" stroke-width="1.2" fill="none" transform="rotate(120 8 8)"/>
+          <circle cx="8" cy="8" r="1.5" fill="#4d9fff"/>
+        </svg>
+      </span>
+      <span class="brand-name">JSPlaskin</span>
+    </div>
+
+    <nav id="menubar">
+
+      <!-- File -->
+      <div class="menu-label" id="menu-file-label">File
+        <div class="menu-dropdown">
+          <div class="menu-item" id="menu-open-h5">Open HDF5 (.h5)…</div>
+          <div class="menu-item" id="menu-open-dir">Import from directory…</div>
+          <div class="menu-sep"></div>
+          <div class="menu-item" id="menu-export">Export plot data…</div>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="menu-label" id="menu-options-label">Options
+        <div class="menu-dropdown">
+          <div class="menu-item" id="menu-logtime">Log scale in time</div>
+          <div class="menu-sep"></div>
+          <div class="menu-item" id="menu-theme">Light theme</div>
+        </div>
+      </div>
+
+      <!-- Help -->
+      <div class="menu-label" id="menu-help-label">Help
+        <div class="menu-dropdown">
+          <div class="menu-item" id="menu-about">About JSPlaskin</div>
+        </div>
+      </div>
+
+    </nav>
+
+    <div id="status-bar">Ready</div>
+  </div><!-- /topbar -->
+
+  <!-- ===== Main content ===== -->
+  <div id="main-content">
+
+    <!-- Tab bar -->
+    <div id="tab-bar">
+      <button class="tab-btn active" data-tab="conditions">Overview</button>
+      <button class="tab-btn"        data-tab="densities">Densities</button>
+      <button class="tab-btn"        data-tab="reactions">Reactions</button>
+      <button class="tab-btn"        data-tab="sensitivity">Sensitivity analysis</button>
+    </div>
+
+    <!-- ===== Overview tab (Conditions) ===== -->
+    <div id="tab-conditions" class="tab-pane active">
+      <div class="left-panel">
+        <div class="list-wrap">
+          <table id="cond-table" class="data-list">
+            <thead><tr><th>#</th><th>Condition</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <button class="plot-btn" id="btn-plot-cond">Plot conditions</button>
+      </div>
+      <div class="right-panel">
+        <div class="chart-area">
+          <div id="cond-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Densities tab ===== -->
+    <div id="tab-densities" class="tab-pane">
+      <div class="left-panel">
+        <div class="list-wrap">
+          <table id="spec-table" class="data-list">
+            <thead><tr><th>#</th><th>Species</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="list-hint">Click · Ctrl+click · Shift+click</div>
+        <button class="plot-btn" id="btn-plot-dens">Plot selected densities</button>
+      </div>
+      <div class="right-panel">
+        <div class="chart-area">
+          <div id="dens-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Reactions tab ===== -->
+    <div id="tab-reactions" class="tab-pane">
+      <div class="left-panel">
+        <div class="list-wrap">
+          <table id="react-table" class="data-list">
+            <thead><tr><th>#</th><th>Reaction</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="list-hint">Click · Ctrl+click · Shift+click</div>
+        <button class="plot-btn" id="btn-plot-react">Plot reaction speed</button>
+      </div>
+      <div class="right-panel">
+        <div class="chart-area">
+          <div id="react-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Sensitivity analysis tab ===== -->
+    <div id="tab-sensitivity" class="tab-pane">
+      <div class="left-panel">
+        <div class="list-wrap">
+          <table id="src-table" class="data-list">
+            <thead><tr><th>#</th><th>Species</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="filter-row">
+          <label for="src-filter">Filter:</label>
+          <select id="src-filter">
+            <option value="0.1">Filter at 10%</option>
+            <option value="0.01">Filter at 1%</option>
+            <option value="0.001">Filter at 0.1%</option>
+            <option value="0.0001">Filter at 0.01%</option>
+            <option value="0">Show all</option>
+          </select>
+        </div>
+        <button class="plot-btn" id="btn-plot-src">Plot</button>
+      </div>
+      <div class="right-panel">
+        <div class="source-charts">
+          <div id="creation-chart"></div>
+          <div id="removal-chart"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+
+</div><!-- /app -->
+
+<!-- Hidden file inputs -->
+<input type="file" id="input-h5"  accept=".h5,.hdf5" style="display:none">
+<input type="file" id="input-dir" webkitdirectory multiple style="display:none">
+
+<!-- Drop overlay -->
+<div id="drop-overlay" class="hidden">
+  <div class="drop-msg">
+    Drop file or folder here
+    <small>.h5 file  or  folder containing qt_*.txt files</small>
+  </div>
+</div>
+
+<!-- Loading overlay -->
+<div id="loading-overlay" class="hidden">
+  <div class="spinner"></div>
+  <div id="loading-msg">Loading…</div>
+</div>
+
+<!-- Plotly (pinned minor version for stability) -->
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+
+<!-- App (ES module) -->
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>
