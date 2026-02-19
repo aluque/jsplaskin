@@ -325,16 +325,18 @@ function registerSync(divId) {
     }
     sharedXRange = newRange;
     isSyncing = true;
-    chartIds.forEach(id => {
-      if (id === divId) return;
-      const other = document.getElementById(id);
-      if (!other || !other._fullLayout) return;
-      Plotly.relayout(other, newRange
-        ? { 'xaxis.range': newRange }
-        : { 'xaxis.autorange': true }
-      ).catch(() => {});
-    });
-    isSyncing = false;
+    Promise.all(
+      chartIds
+        .filter(id => id !== divId)
+        .map(id => {
+          const other = document.getElementById(id);
+          if (!other || !other._fullLayout) return Promise.resolve();
+          return Plotly.relayout(other, newRange
+            ? { 'xaxis.range': newRange }
+            : { 'xaxis.autorange': true }
+          ).catch(() => {});
+        })
+    ).then(() => { isSyncing = false; });
   });
 }
 
