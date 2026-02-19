@@ -634,6 +634,26 @@ function exportCurrentPlot() {
   URL.revokeObjectURL(url);
 }
 
+async function downloadPlotAsPDF() {
+  const activeTab = document.querySelector('.tab-pane.active');
+  if (!activeTab) return;
+  const chartDiv = activeTab.querySelector('.chart-area > div[id], .source-charts > div[id]');
+  if (!chartDiv || !chartDiv._fullLayout) {
+    alert('No plot to export. Render a chart first.');
+    return;
+  }
+
+  const svgData = await Plotly.toImage(chartDiv, { format: 'svg' });
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html><head><style>
+    body { margin: 0; }
+    img { display: block; width: 100%; }
+    @media print { @page { margin: 1cm; } }
+  </style></head><body><img src="${svgData}"></body></html>`);
+  win.document.close();
+  win.addEventListener('load', () => win.print());
+}
+
 // ============================================================
 // DRAG-AND-DROP: read folder entries recursively
 // ============================================================
@@ -703,6 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('input-dir').click()
   );
   document.getElementById('menu-export').addEventListener('click', exportCurrentPlot);
+  document.getElementById('menu-download-pdf').addEventListener('click', downloadPlotAsPDF);
 
   // ---- Menu: Options ----
   document.getElementById('menu-logtime').addEventListener('click', (e) => {
