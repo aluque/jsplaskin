@@ -751,10 +751,11 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshXScale();
   });
 
-  document.getElementById('menu-theme').addEventListener('click', (e) => {
+  document.getElementById('theme-toggle').addEventListener('click', () => {
     lightTheme = !lightTheme;
     document.documentElement.dataset.theme = lightTheme ? 'light' : 'dark';
-    e.currentTarget.classList.toggle('checked', lightTheme);
+    document.getElementById('theme-icon-dark').style.display  = lightTheme ? 'none' : '';
+    document.getElementById('theme-icon-light').style.display = lightTheme ? ''     : 'none';
     refreshChartColors();
   });
 
