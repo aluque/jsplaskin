@@ -11,7 +11,7 @@ A browser-based viewer for plasma kinetics simulation output, inspired by [QtPla
 - **Reactions** — plot reaction speeds for selected reactions
 - **Sensitivity analysis** — for a chosen species, show the top production and removal reactions, with a configurable contribution threshold
 
-All charts share a synchronised x-axis: zooming or panning one chart moves the others. Time axis can be toggled to log scale. Dark/light theme toggle included.
+All charts share a synchronised x-axis: zooming or panning one chart moves the others. Time axis can be toggled to log scale. A moon/sun icon in the top-right corner switches between dark and light themes.
 
 Charts can be printed (or saved as PDF) via File → Print current plot, and the underlying data can be exported as a CSV file via File → Export plot data.
 
